@@ -14,4 +14,6 @@
     <string name="missing_name">Missing Name</string>
     <string name="missing_phone">Missing Phone</string>
     <string name="no_record">No record</string>
+    <string name="error_profile">Incomplete User Profile</string>
+    <string name="action_upload">Upload</string>
 </resources>

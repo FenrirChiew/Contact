@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "735820610651",
+    "firebase_url": "https://contact-d5c9c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "contact-d5c9c",
+    "storage_bucket": "contact-d5c9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735820610651:android:1c8c0d41db4ca0fe44d37e",
+        "android_client_info": {
+          "package_name": "my.edu.tarc.contact"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735820610651-rs3mkv2bpguij6nvb9qhv4gi17a6djjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoaqhaHy8zELDqRMe2OIy5ykolN1uSHCY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735820610651-rs3mkv2bpguij6nvb9qhv4gi17a6djjf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
