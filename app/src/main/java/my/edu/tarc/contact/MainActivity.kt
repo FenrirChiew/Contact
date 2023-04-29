@@ -34,21 +34,34 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         // Initialize ViewModel
-        contactViewModel = ViewModelProvider(this).get(ContactViewModel::class.java)
+        contactViewModel = ViewModelProvider(this)[ContactViewModel::class.java]
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.nav_settings || destination.id == R.id.nav_second) {
-                binding.fab.visibility = View.INVISIBLE
-            } else {
-                binding.fab.visibility = View.VISIBLE
+            when (destination.id) {
+                R.id.nav_settings -> {
+                    binding.fab.visibility = View.INVISIBLE
+                    title = getString(R.string.action_settings)
+                }
+
+                R.id.nav_second -> {
+                    title = if (contactViewModel.selectedIndex == -1) {
+                        getString(R.string.add)
+                    } else
+                        getString(R.string.edit)
+                }
+
+                else -> {
+                    binding.fab.visibility = View.VISIBLE
+                    title = getString(R.string.app_name)
+                }
             }
         }
 
-        binding.fab.setOnClickListener { view ->
+        binding.fab.setOnClickListener {
             findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
 
@@ -81,6 +94,7 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_settings)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

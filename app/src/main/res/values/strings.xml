@@ -16,4 +16,7 @@
     <string name="no_record">No record</string>
     <string name="error_profile">Incomplete User Profile</string>
     <string name="action_upload">Upload</string>
+    <string name="delete">Delete</string>
+    <string name="delete_record">Delete this contact?</string>
+    <string name="edit">Edit</string>
 </resources>

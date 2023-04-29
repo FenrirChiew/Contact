@@ -7,23 +7,24 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
+class ContactAdapter(private val recordClickListener: RecordClickListener) :
+    RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
     //Cached copy of contacts
     private var contactList = emptyList<Contact>()
 
-    class ViewHolder (view: View): RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textViewName: TextView = view.findViewById(R.id.textViewContactName)
-        val textViewContact: TextView= view.findViewById(R.id.textViewContact)
+        val textViewContact: TextView = view.findViewById(R.id.textViewContact)
     }
 
-    internal fun setContact(contact: List<Contact>){
+    internal fun setContact(contact: List<Contact>) {
         this.contactList = contact
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //Create a new view, which define the UI of the list item
-        val view =  LayoutInflater.from(parent.context).inflate(R.layout.record, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.record, parent, false)
 
         return ViewHolder(view)
     }
@@ -34,12 +35,20 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
         holder.textViewContact.text = contactList[position].phone
         holder.itemView.setOnClickListener {
             //Item click event handler
-            Toast.makeText(it.context, "Contact name:" + contactList[position].name, Toast.LENGTH_SHORT).show()
+            recordClickListener.onRecordClickListener(position)
+//            Toast.makeText(
+//                it.context,
+//                "Contact name:" + contactList[position].name,
+//                Toast.LENGTH_SHORT
+//            ).show()
         }
     }
 
     override fun getItemCount(): Int {
         return contactList.size
     }
+}
 
+interface RecordClickListener {
+    fun onRecordClickListener(index: Int)
 }

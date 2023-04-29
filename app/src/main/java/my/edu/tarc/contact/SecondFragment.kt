@@ -1,5 +1,6 @@
 package my.edu.tarc.contact
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -25,6 +26,7 @@ class SecondFragment : Fragment(), MenuProvider {
 
     // Refers to the ViewModel created by the Main Activity
     private val myContactViewModel: ContactViewModel by activityViewModels()
+    private var isEditing: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,16 +48,31 @@ class SecondFragment : Fragment(), MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Determine the view mode; edit or new
+        isEditing = myContactViewModel.selectedIndex != -1
+        if (isEditing) {
+            with(binding) {
+                val contact: Contact =
+                    myContactViewModel.contactList.value!!.get(myContactViewModel.selectedIndex)
+                editTextName.setText(contact.name)
+                editTextPhone.setText(contact.phone)
+                editTextName.requestFocus()
+                editTextPhone.isEnabled = false
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        myContactViewModel.selectedIndex = -1
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menu.clear()
         menuInflater.inflate(R.menu.second_menu, menu)
-        menu.findItem(R.id.action_settings).isVisible = false
+        // menu.findItem(R.id.action_settings).isVisible = false
+        menu.findItem(R.id.action_delete).isVisible = isEditing
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -73,14 +90,31 @@ class SecondFragment : Fragment(), MenuProvider {
                     val phone = editTextPhone.text.toString()
                     val newContact = Contact(name, phone)
                     myContactViewModel.addContact(newContact)
+                    if (isEditing) {
+                        myContactViewModel.updateContact(newContact)
+                    } else {
+                        myContactViewModel.addContact(newContact)
+                    }
                 }
                 Toast.makeText(context, getString(R.string.contact_saved), Toast.LENGTH_SHORT)
                     .show()
+                findNavController().navigateUp()
             }
+        } else if (menuItem.itemId == R.id.action_delete) {
+            val builder = AlertDialog.Builder(requireActivity())
+            builder.setMessage(getString(R.string.delete_record))
+                .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                    val contact =
+                        myContactViewModel.contactList.value!!.get(myContactViewModel.selectedIndex)
+                    myContactViewModel.deleteContact(contact)
+                    findNavController().navigateUp()
+                }.setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                    // DO NOTHING HERE
+                }
+            builder.create().show()
         } else if (menuItem.itemId == android.R.id.home) {
             findNavController().navigateUp()
         }
         return true
     }
-
 }

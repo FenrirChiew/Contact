@@ -20,7 +20,7 @@ import my.edu.tarc.contact.databinding.FragmentFirstBinding
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment(), MenuProvider {
+class FirstFragment : Fragment(), MenuProvider, RecordClickListener {
 
     private var _binding: FragmentFirstBinding? = null
 
@@ -52,7 +52,7 @@ class FirstFragment : Fragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ContactAdapter()
+        val adapter = ContactAdapter(this)
 
         // Add an observer
         myContactViewModel.contactList.observe(
@@ -63,8 +63,8 @@ class FirstFragment : Fragment(), MenuProvider {
                     binding.textViewCount.text = getString(R.string.no_record)
                 } else {
                     binding.textViewCount.isVisible = false
-                    adapter.setContact(it)
                 }
+                adapter.setContact(it)
             }
         )
         binding.recyclerView.adapter = adapter
@@ -97,5 +97,10 @@ class FirstFragment : Fragment(), MenuProvider {
             }
         }
         return true
+    }
+
+    override fun onRecordClickListener(index: Int) {
+        myContactViewModel.selectedIndex = index
+        findNavController().navigate(R.id.nav_second)
     }
 }
