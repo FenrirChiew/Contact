@@ -19,4 +19,9 @@
     <string name="delete">Delete</string>
     <string name="delete_record">Delete this contact?</string>
     <string name="edit">Edit</string>
+    <string name="download">Download</string>
+    <string name="url_server">https://meowmeowshopcontact.000webhostapp.com/api/</string>
+    <string name="url_get_all">user/read.php</string>
+    <string name="url_insert">user/create.php</string>
+    <string name="contact_not_saved">Contact Not Saved</string>
 </resources>

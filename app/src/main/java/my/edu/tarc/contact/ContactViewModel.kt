@@ -29,4 +29,8 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
     fun deleteContact(contact: Contact) = viewModelScope.launch {
         repository.delete(contact)
     }
+
+    fun deleteAll() = viewModelScope.launch {
+        repository.deleteAll()
+    }
 }

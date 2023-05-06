@@ -2,6 +2,7 @@ package my.edu.tarc.contact
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -11,7 +12,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
 import my.edu.tarc.contact.databinding.FragmentSecondBinding
+import my.edu.tarc.mycontact.WebDB
+import org.json.JSONObject
+import java.lang.Exception
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -71,8 +78,8 @@ class SecondFragment : Fragment(), MenuProvider {
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menu.clear()
         menuInflater.inflate(R.menu.second_menu, menu)
-        // menu.findItem(R.id.action_settings).isVisible = false
-        menu.findItem(R.id.action_delete).isVisible = isEditing
+        //menu.findItem(R.id.action_settings).isVisible = false
+        //menu.findItem(R.id.action_delete).isVisible = isEditing
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -116,5 +123,45 @@ class SecondFragment : Fragment(), MenuProvider {
             findNavController().navigateUp()
         }
         return true
+    }
+
+    private fun createUser(contact: Contact) {
+        val url =
+            getString(R.string.url_server) + getString(R.string.url_insert) + "?name=" + contact.name + "&contact=" + contact.phone
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                try {
+                    if (response != null) {
+                        val strResponse = response.toString()
+                        val jsonResponse = JSONObject(strResponse)
+                        val success: String = jsonResponse.get("success").toString()
+
+
+                        if (success.equals("1")) {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.contact_saved),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.contact_not_saved),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d("Second Fragment", "Response: %s".format(e.message.toString()))
+                }
+            },
+            { error ->
+                Log.d("Second Fragment", "Response : %s".format(error.message.toString()))
+            }
+        )
+        jsonObjectRequest.retryPolicy =
+            DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 1f)
+        WebDB.getInstance(requireContext()).addToRequestQueue(jsonObjectRequest)
     }
 }

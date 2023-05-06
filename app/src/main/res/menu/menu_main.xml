@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="my.edu.tarc.contact.MainActivity">
     <item
+        android:id="@+id/action_download"
+        android:icon="@drawable/ic_baseline_cloud_download_24"
+        android:title="@string/download" />
+    <item
         android:id="@+id/action_upload"
         android:icon="@drawable/ic_baseline_cloud_upload_24"
         android:orderInCategory="100"

@@ -9,6 +9,9 @@ interface ContactDao {
     @Query("SELECT * FROM contact ORDER BY name ASC")
     fun getAllContact(): LiveData<List<Contact>>
 
+    @Query("DELETE FROM contact")
+    suspend fun deleteAll()
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(contact: Contact)
 
